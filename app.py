@@ -15,9 +15,9 @@ from flask import Flask, jsonify
 #################################################
 engine = create_engine("sqlite:///hawaii.sqlite")
 
-# reflect existing database into a new model
+# reflect existing db into new model
 Base = automap_base()
-# reflect the tables
+# reflect tables
 Base.prepare(engine, reflect=True)
 
 # Save references for each table
@@ -52,10 +52,10 @@ def welcome():
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     """Return the precipitation data for the last year"""
-    # Calculate the date 1 year ago from last date in database
+    # Calculate  date 1 year ago from last date in db
     prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
 
-    # Query for the date and precipitation for last year
+    # Query for date and precipitation for last year
     precipitation = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date >= prev_year).all()
 
@@ -69,7 +69,7 @@ def stations():
     """Return a list of stations."""
     results = session.query(Station.station).all()
 
-    # Unravel results into a 1D array and convert to a list
+    # Unravel results into a 1D array and convert to list
     stations = list(np.ravel(results))
     return jsonify(stations=stations)
 
@@ -77,18 +77,18 @@ def stations():
 @app.route("/api/v1.0/tobs")
 def temp_monthly():
     """Return the temperature observations (tobs) for previous year."""
-    # Calculate the date 1 year ago from last date in db
+    # Calculate date 1 year ago from last date in db
     prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
 
-    # Query the primary station for all tobs from the last year
+    # Query the primary station for all tobs from last year
     results = session.query(Measurement.tobs).\
         filter(Measurement.station == 'USC00519281').\
         filter(Measurement.date >= prev_year).all()
 
-    # Unravel results into a 1D array and convert to a list
+    # Unravel results into a 1D array and convert to list
     temps = list(np.ravel(results))
 
-    # Return the results
+    # Return results
     return jsonify(temps=temps)
 
 
